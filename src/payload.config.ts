@@ -5,8 +5,8 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users'
-import { Media } from './collections/Media'
+import { Users } from '@/payload/collections/users/Users'
+import { Media } from '@/payload/collections/media/Media'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -28,7 +28,13 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    push: false,
+    migrationDir: './src/payload/migrations',
+    idType: 'uuid',
   }),
+  graphQL: {
+    disable: true,
+  },
   sharp,
   plugins: [],
 })
