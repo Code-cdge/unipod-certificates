@@ -67,6 +67,7 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    attendants: Attendant;
     media: Media;
     trainings: Training;
     users: User;
@@ -77,6 +78,7 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    attendants: AttendantsSelect<false> | AttendantsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     trainings: TrainingsSelect<false> | TrainingsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -121,24 +123,23 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
+ * via the `definition` "attendants".
  */
-export interface Media {
+export interface Attendant {
   id: string;
-  alt?: string | null;
+  code: string;
+  firstName: string;
+  lastName?: string | null;
+  fullName: string;
+  birthDate?: string | null;
+  age?: number | null;
+  sex?: ('M' | 'F') | null;
+  phone?: string | null;
+  email?: string | null;
   createdBy?: (string | null) | User;
   updatedBy?: (string | null) | User;
   updatedAt: string;
   createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -168,6 +169,27 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  alt?: string | null;
+  createdBy?: (string | null) | User;
+  updatedBy?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -209,6 +231,10 @@ export interface PayloadKv {
 export interface PayloadLockedDocument {
   id: string;
   document?:
+    | ({
+        relationTo: 'attendants';
+        value: string | Attendant;
+      } | null)
     | ({
         relationTo: 'media';
         value: string | Media;
@@ -262,6 +288,25 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendants_select".
+ */
+export interface AttendantsSelect<T extends boolean = true> {
+  code?: T;
+  firstName?: T;
+  lastName?: T;
+  fullName?: T;
+  birthDate?: T;
+  age?: T;
+  sex?: T;
+  phone?: T;
+  email?: T;
+  createdBy?: T;
+  updatedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
