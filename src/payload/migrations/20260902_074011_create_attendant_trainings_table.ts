@@ -13,7 +13,8 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
   	"updated_by_id" uuid,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
-     CONSTRAINT grade_must_be_positive CHECK ( grade >= 0 )
+     CONSTRAINT grade_must_be_positive CHECK ( grade >= 0 ),
+     CONSTRAINT attendant_training_unique UNIQUE (attendant_id, training_id)
   );
   
   ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "attendant_trainings_id" uuid;
@@ -37,7 +38,7 @@ export async function down({ db }: MigrateDownArgs): Promise<void> {
   await db.execute(sql`
    ALTER TABLE "attendant_trainings" DISABLE ROW LEVEL SECURITY;
   DROP TABLE "attendant_trainings" CASCADE;
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_attendant_trainings_fk";
+  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT IF EXISTS "payload_locked_documents_rels_attendant_trainings_fk";
   
   DROP INDEX IF EXISTS "payload_locked_documents_rels_attendant_trainings_id_idx";
   ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "attendant_trainings_id";`)
