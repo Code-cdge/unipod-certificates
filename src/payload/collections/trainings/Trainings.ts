@@ -5,6 +5,10 @@ import { validateEndDate, validateStartDate } from '@/payload/collections/traini
 export const Trainings: CollectionConfig = withUserAuditFields(
   withAccessControl({
     slug: 'trainings',
+    labels: {
+      plural: 'Formaciones',
+      singular: 'Formación'
+    },
     admin: {
       useAsTitle: 'code',
     },

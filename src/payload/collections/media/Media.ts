@@ -1,19 +1,25 @@
 import type { CollectionConfig } from 'payload'
 import { withAccessControl, withUserAuditFields } from '@/payload/lib/helpers/collection.helpers'
 
-export const Media: CollectionConfig = withUserAuditFields(withAccessControl({
-  slug: 'media',
-  access: {
-    read: () => true,
-  },
-  fields: [
-    {
-      name: 'alt',
-      type: 'text',
-      required: false,
+export const Media: CollectionConfig = withUserAuditFields(
+  withAccessControl({
+    slug: 'media',
+    labels: {
+      plural: 'Archivos',
+      singular: 'Archivo',
     },
-  ],
-  upload: {
-    mimeTypes: ['image/*', 'application/pdf'],
-  },
-}))
+    access: {
+      read: () => true,
+    },
+    fields: [
+      {
+        name: 'alt',
+        type: 'text',
+        required: false,
+      },
+    ],
+    upload: {
+      mimeTypes: ['image/*', 'application/pdf'],
+    },
+  }),
+)

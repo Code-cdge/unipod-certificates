@@ -6,6 +6,10 @@ import { validateBirthDate } from '@/payload/collections/attendants/validations'
 export const Attendants: CollectionConfig = withUserAuditFields(
   withAccessControl({
     slug: 'attendants',
+    labels: {
+      plural: 'Participantes',
+      singular: 'Participante',
+    },
     admin: {
       useAsTitle: 'firstName',
     },
@@ -41,7 +45,7 @@ export const Attendants: CollectionConfig = withUserAuditFields(
         type: 'text',
         virtual: true,
         required: true,
-        hooks: { afterRead: [generateFullName] }
+        hooks: { afterRead: [generateFullName] },
       },
       {
         name: 'birthDate',
@@ -57,7 +61,7 @@ export const Attendants: CollectionConfig = withUserAuditFields(
         type: 'number',
         virtual: true,
         required: false,
-        hooks: { afterRead: [generateAge] }
+        hooks: { afterRead: [generateAge] },
       },
       {
         name: 'sex',
@@ -73,22 +77,22 @@ export const Attendants: CollectionConfig = withUserAuditFields(
         minLength: 1,
         maxLength: 32,
         required: false,
-        unique: true
+        unique: true,
       },
       {
         name: 'email',
         label: 'Correo electrónico',
         type: 'email',
         required: false,
-        unique: true
+        unique: true,
       },
       {
         name: 'trainings',
         label: 'Certificados',
         type: 'join',
         collection: 'attendant-trainings',
-        on: 'attendant'
-      }
+        on: 'attendant',
+      },
     ],
   }),
 )

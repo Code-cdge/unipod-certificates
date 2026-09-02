@@ -14,6 +14,7 @@ export function withUserAuditFields(config: CollectionConfig, required = false):
       ...config.fields,
       {
         name: 'createdBy',
+        label: 'Creado por',
         type: 'relationship',
         relationTo: 'users',
         required,
@@ -28,6 +29,7 @@ export function withUserAuditFields(config: CollectionConfig, required = false):
       },
       {
         name: 'updatedBy',
+        label: 'Actualizado por',
         type: 'relationship',
         relationTo: 'users',
         required,
