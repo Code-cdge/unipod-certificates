@@ -82,6 +82,13 @@ export const Attendants: CollectionConfig = withUserAuditFields(
         required: false,
         unique: true
       },
+      {
+        name: 'trainings',
+        label: 'Certificados',
+        type: 'join',
+        collection: 'attendant-trainings',
+        on: 'attendant'
+      }
     ],
   }),
 )

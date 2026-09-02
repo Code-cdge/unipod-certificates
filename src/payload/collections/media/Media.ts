@@ -13,5 +13,7 @@ export const Media: CollectionConfig = withUserAuditFields(withAccessControl({
       required: false,
     },
   ],
-  upload: true,
+  upload: {
+    mimeTypes: ['image/*', 'application/pdf'],
+  },
 }))

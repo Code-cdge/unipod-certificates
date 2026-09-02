@@ -9,6 +9,7 @@ import { Users } from '@/payload/collections/users/Users'
 import { Media } from '@/payload/collections/media/Media'
 import { Trainings } from '@/payload/collections/trainings/Trainings'
 import { Attendants } from '@/payload/collections/attendants/Attendants'
+import { AttendantTrainings } from '@/payload/collections/attendant-trainings/AttendantTrainings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -22,6 +23,7 @@ export default buildConfig({
   },
   collections: [
     Attendants,
+    AttendantTrainings,
     Media,
     Trainings,
     Users

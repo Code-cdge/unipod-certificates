@@ -6,7 +6,7 @@ export const Trainings: CollectionConfig = withUserAuditFields(
   withAccessControl({
     slug: 'trainings',
     admin: {
-      useAsTitle: 'title',
+      useAsTitle: 'code',
     },
     fields: [
       {

@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     attendants: Attendant;
+    'attendant-trainings': AttendantTraining;
     media: Media;
     trainings: Training;
     users: User;
@@ -76,9 +77,14 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    attendants: {
+      trainings: 'attendant-trainings';
+    };
+  };
   collectionsSelect: {
     attendants: AttendantsSelect<false> | AttendantsSelect<true>;
+    'attendant-trainings': AttendantTrainingsSelect<false> | AttendantTrainingsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     trainings: TrainingsSelect<false> | TrainingsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -136,6 +142,43 @@ export interface Attendant {
   sex?: ('M' | 'F') | null;
   phone?: string | null;
   email?: string | null;
+  trainings?: {
+    docs?: (string | AttendantTraining)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  createdBy?: (string | null) | User;
+  updatedBy?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendant-trainings".
+ */
+export interface AttendantTraining {
+  id: string;
+  attendant: string | Attendant;
+  training: string | Training;
+  certificate?: (string | null) | Media;
+  grade?: number | null;
+  qualification?: string | null;
+  createdBy?: (string | null) | User;
+  updatedBy?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trainings".
+ */
+export interface Training {
+  id: string;
+  code: string;
+  title: string;
+  placement: string;
+  startDate?: string | null;
+  endDate?: string | null;
   createdBy?: (string | null) | User;
   updatedBy?: (string | null) | User;
   updatedAt: string;
@@ -193,22 +236,6 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "trainings".
- */
-export interface Training {
-  id: string;
-  code: string;
-  title: string;
-  placement: string;
-  startDate?: string | null;
-  endDate?: string | null;
-  createdBy?: (string | null) | User;
-  updatedBy?: (string | null) | User;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -234,6 +261,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'attendants';
         value: string | Attendant;
+      } | null)
+    | ({
+        relationTo: 'attendant-trainings';
+        value: string | AttendantTraining;
       } | null)
     | ({
         relationTo: 'media';
@@ -303,6 +334,22 @@ export interface AttendantsSelect<T extends boolean = true> {
   sex?: T;
   phone?: T;
   email?: T;
+  trainings?: T;
+  createdBy?: T;
+  updatedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendant-trainings_select".
+ */
+export interface AttendantTrainingsSelect<T extends boolean = true> {
+  attendant?: T;
+  training?: T;
+  certificate?: T;
+  grade?: T;
+  qualification?: T;
   createdBy?: T;
   updatedBy?: T;
   updatedAt?: T;
