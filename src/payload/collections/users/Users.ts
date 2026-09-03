@@ -12,7 +12,9 @@ export const Users: CollectionConfig = withUserAuditFields(
     admin: {
       useAsTitle: 'email',
     },
-    auth: true,
+    auth: {
+      useAPIKey: true
+    },
     access: {
       read: isAdmin,
     },
