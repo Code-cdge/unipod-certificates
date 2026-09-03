@@ -10,6 +10,7 @@ import { Media } from '@/payload/collections/media/Media'
 import { Trainings } from '@/payload/collections/trainings/Trainings'
 import { Attendants } from '@/payload/collections/attendants/Attendants'
 import { AttendantTrainings } from '@/payload/collections/attendant-trainings/AttendantTrainings'
+import { es } from '@payloadcms/translations/languages/es'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -20,6 +21,10 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+  },
+  i18n: {
+    supportedLanguages: {es},
+    fallbackLanguage: 'es'
   },
   collections: [
     Attendants,
