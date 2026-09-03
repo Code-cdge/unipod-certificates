@@ -2,7 +2,10 @@ import { CollectionConfig } from 'payload'
 import { withAccessControl, withUserAuditFields } from '@/payload/lib/helpers/collection.helpers'
 import { generateAge, generateFullName } from '@/payload/collections/attendants/hooks'
 import { validateBirthDate } from '@/payload/collections/attendants/validations'
-import { importHandler } from '@/payload/collections/attendants/endpoint-handlers'
+import {
+  downloadCertificate,
+  importHandler,
+} from '@/payload/collections/attendants/endpoint-handlers'
 import { randomId } from '@/payload/lib/utils'
 
 export const Attendants: CollectionConfig = withUserAuditFields(
@@ -24,6 +27,11 @@ export const Attendants: CollectionConfig = withUserAuditFields(
         method: 'post',
         handler: importHandler,
       },
+      {
+        path: '/:code/download-certificate',
+        method: 'get',
+        handler: downloadCertificate
+      }
     ],
     fields: [
       {
