@@ -11,11 +11,13 @@ import { Trainings } from '@/payload/collections/trainings/Trainings'
 import { Attendants } from '@/payload/collections/attendants/Attendants'
 import { AttendantTrainings } from '@/payload/collections/attendant-trainings/AttendantTrainings'
 import { es } from '@payloadcms/translations/languages/es'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  serverURL: process.env.APP_URL,
   admin: {
     user: Users.slug,
     importMap: {
@@ -23,16 +25,10 @@ export default buildConfig({
     },
   },
   i18n: {
-    supportedLanguages: {es},
-    fallbackLanguage: 'es'
+    supportedLanguages: { es },
+    fallbackLanguage: 'es',
   },
-  collections: [
-    Attendants,
-    AttendantTrainings,
-    Media,
-    Trainings,
-    Users
-  ],
+  collections: [Attendants, AttendantTrainings, Media, Trainings, Users],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -50,5 +46,17 @@ export default buildConfig({
     disable: true,
   },
   sharp,
+  email: nodemailerAdapter({
+    defaultFromAddress: 'code.cdge@gmail.com',
+    defaultFromName: 'UniPod',
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    },
+  }),
   plugins: [],
 })
