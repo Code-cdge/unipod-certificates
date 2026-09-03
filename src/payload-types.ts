@@ -136,7 +136,7 @@ export interface Attendant {
   code: string;
   firstName: string;
   lastName?: string | null;
-  fullName: string;
+  fullName?: string | null;
   birthDate?: string | null;
   age?: number | null;
   sex?: ('M' | 'F') | null;

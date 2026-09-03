@@ -2,6 +2,8 @@ import { CollectionConfig } from 'payload'
 import { withAccessControl, withUserAuditFields } from '@/payload/lib/helpers/collection.helpers'
 import { generateAge, generateFullName } from '@/payload/collections/attendants/hooks'
 import { validateBirthDate } from '@/payload/collections/attendants/validations'
+import { importHandler } from '@/payload/collections/attendants/endpoint-handlers'
+import { randomId } from '@/payload/lib/utils'
 
 export const Attendants: CollectionConfig = withUserAuditFields(
   withAccessControl({
@@ -12,16 +14,27 @@ export const Attendants: CollectionConfig = withUserAuditFields(
     },
     admin: {
       useAsTitle: 'firstName',
+      components: {
+        beforeListTable: ['/payload/collections/attendants/components.tsx#ImportButton'],
+      },
     },
+    endpoints: [
+      {
+        path: '/import',
+        method: 'post',
+        handler: importHandler,
+      },
+    ],
     fields: [
       {
-        name: 'code' /*TODO: generate a default value for this field */,
+        name: 'code',
         label: 'Código del asistente',
         type: 'text',
         minLength: 1,
         maxLength: 8,
         required: true,
         unique: true,
+        defaultValue: () => randomId()
       },
       {
         name: 'firstName',
@@ -44,7 +57,7 @@ export const Attendants: CollectionConfig = withUserAuditFields(
         label: 'Nombre completo',
         type: 'text',
         virtual: true,
-        required: true,
+        required: false,
         hooks: { afterRead: [generateFullName] },
       },
       {
