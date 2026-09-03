@@ -1,67 +1,62 @@
-# Payload Blank Template
+# Aplicación para descargar Certificados de las formaciones UniPod
 
-This template comes configured with the bare minimum to get started on anything you need.
+Esta aplicación web permitirá a los participantes de las formaciones UniPod descargar sus propios certificados
+mediante su código de identificación único.
 
-## Quick start
+## Stack de desarrollo
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+Este es un proyecto monolítico que se desarrolla con las siguientes tecnologías
+- **Next js:** Framework Full Stack basado en React
+- **Payload CMS:** Gestor de Contenidos
+- **Postgres SQL:** Motor de base de datos
 
-## Quick Start - local setup
+## Guía rápida - desarrollo local
 
-To spin up this template locally, follow these steps:
+Para ejecutar este proyecto localmente en su computadora siga los siguientes pasos
 
-### Clone
+### Clona el repositorio
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+Para acceder al código fuente [Clona este repositorio](https://github.com/Code-cdge/unipod-certificates.git) y cambia a la rama `dev`.
 
-### Development
+### Desarrollo
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+1. Primero clona el repositorio si todavía no lo has hecho
+2. `cd unipod-certificates && cp .env.example .env` para copiar las variables de entorno de ejemplo. Asegúrate de cambiar el valor de `DATABASE_URL` con el string de conexión a tu base de datos.
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+3. `pnpm install && pnpm dev` para instalar las dependencias e iniciar el servidor local
+4. abre `http://localhost:3000` para ver el proyecto en el navegador
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+Esto es! Los cambios realizados en `./src` se reflejarán en el navegador automáticamente. Sigue las instrucciones para crear la primera cuenta en el panel de administración.
 
-#### Docker (Optional)
+## Cómo funciona
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+Este proyecto incluye fronted y backend. A demás incluye un panel de administración para gestionar el contenido de la base de datos. El código está estructurado de la siguiente forma
 
-To do so, follow these steps:
+- La carpeta `src/payload` contiene todo el código del **backend**
+- La carpeta `src/payload/(frontend)` contiene las páginas para frontend
+- La carpeta `src/payload/(paylod)` no debe editarse, ya que contiene el código del panel de administración y es generado por Payload CMS
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+### Colecciones (tablas) de la base de datos
 
-## How it works
+Las siguientes tablas (colecciones en el vocabulario de CMS) se han creado para gestionar la descarga de certificados.
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+- #### Usuarios (Autenticación)
 
-### Collections
-
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
-
-- #### Users (Authentication)
-
-  Users are auth-enabled collections that have access to the admin panel.
-
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+  Esta tabla contiene los usuarios que tienen acceso al panel de control del CMS
 
 - #### Media
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
+  Esta tabla almacena referencias a archivos subidos al CMS como los certificados que se van a generar
 
-### Docker
+- #### Attendants
+  Participantes a las formaciones
 
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
+- #### Trainings
+  Programas de formación
 
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
+- #### AttendantTrainings
+  Relaciona participantes con las formaciones que han asistido y almacena los certificados de cada formación
 
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
+## Preguntas
 
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+Si tienen alguna pregunta escriban en el grupo y consultar la documentación de [Next js](https://nextjs.org) y [Payload CMS](http://payloadcms.com)

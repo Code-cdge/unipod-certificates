@@ -7,6 +7,8 @@ import { fileURLToPath } from 'url'
 import config from '@/payload.config'
 import './styles.css'
 
+import UniPodLogo from '@/../public/assets/images/Unipod-Logo.png'
+
 export default async function HomePage() {
   const headers = await getHeaders()
   const payloadConfig = await config
@@ -19,16 +21,15 @@ export default async function HomePage() {
     <div className="home">
       <div className="content">
         <picture>
-          <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-favicon.svg" />
           <Image
             alt="Payload Logo"
             height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-favicon.svg"
-            width={65}
+            src={UniPodLogo}
           />
         </picture>
-        {!user && <h1>Welcome to your new project.</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
+        <h1>Bienvenido</h1>
+        <h2>Enhorabuena por completar su formación en UniPod</h2>
+        <p>Utiliza esta página para descargar tu certificado de finalización</p>
         <div className="links">
           <a
             className="admin"
@@ -36,7 +37,7 @@ export default async function HomePage() {
             rel="noopener noreferrer"
             target="_blank"
           >
-            Go to admin panel
+            Ir al panel de control
           </a>
           <a
             className="docs"
@@ -44,12 +45,12 @@ export default async function HomePage() {
             rel="noopener noreferrer"
             target="_blank"
           >
-            Documentation
+            Documentación de Payload
           </a>
         </div>
       </div>
       <div className="footer">
-        <p>Update this page by editing</p>
+        <p>Actualiza esta página editando</p>
         <a className="codeLink" href={fileURL}>
           <code>app/(frontend)/page.tsx</code>
         </a>
