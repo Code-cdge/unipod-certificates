@@ -68,30 +68,29 @@ export const importHandler: PayloadHandler = async (req) => {
       continue
     }
 
-    try {
-      const attendant = await req.payload.create({ collection: 'attendants', data: data, req })
-      const trainingCode = row['formacion'] || row['Formacion'] || row['FORMACION']
-      if (trainingCode) {
-        const training = await req.payload.db.findOne<Training>({
-          collection: 'trainings',
-          where: { code: { equals: trainingCode } },
+    const attendant = await req.payload.create({ collection: 'attendants', data: data, req })
+    const trainingCode = row['formacion'] || row['Formacion'] || row['FORMACION']
+    if (trainingCode) {
+      const training = await req.payload.db.findOne<Training>({
+        collection: 'trainings',
+        where: { code: { equals: trainingCode.trim() } },
+      })
+      if (training) {
+        await req.payload.create({
+          collection: 'attendant-trainings',
+          data: {
+            attendant: attendant.id,
+            training: training.id,
+          },
+          req,
         })
-        if (training) {
-          await req.payload.create({
-            collection: 'attendant-trainings',
-            data: {
-              attendant: attendant.id,
-              training: training.id
-            },
-            req
-          })
-        }
+        const newAttendant = await findAttendantByCode(attendant.code, req)
+        const certificate = await generateCertificate(newAttendant.docs[0]).getBuffer()
+        const uploaded = await uploadAttendantCertificate(attendant, certificate, req)
+        await updateAttendantTrainingCertificate(attendant.id, training.id, uploaded.id, req)
       }
-      results.created++
-    } catch (err: any) {
-      results.failed++
-      results.errors.push(err.message)
     }
+    results.created++
   }
 
   return Response.json(results)
