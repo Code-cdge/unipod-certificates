@@ -1,6 +1,10 @@
 import { CollectionConfig } from 'payload'
 import { withAccessControl, withUserAuditFields } from '@/payload/lib/helpers/collection.helpers'
-import { generateAge, generateFullName } from '@/payload/collections/attendants/hooks'
+import {
+  deleteTrainings,
+  generateAge,
+  generateFullName,
+} from '@/payload/collections/attendants/hooks'
 import { validateBirthDate } from '@/payload/collections/attendants/validations'
 import {
   downloadCertificate,
@@ -20,6 +24,9 @@ export const Attendants: CollectionConfig = withUserAuditFields(
       components: {
         beforeListTable: ['/payload/collections/attendants/components.tsx#ImportButton'],
       },
+    },
+    hooks: {
+      beforeDelete: [deleteTrainings]
     },
     endpoints: [
       {
@@ -113,6 +120,7 @@ export const Attendants: CollectionConfig = withUserAuditFields(
         type: 'join',
         collection: 'attendant-trainings',
         on: 'attendant',
+        maxDepth: 3
       },
     ],
   }),
