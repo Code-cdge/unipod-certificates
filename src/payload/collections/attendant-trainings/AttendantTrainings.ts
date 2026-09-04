@@ -1,6 +1,7 @@
 import { CollectionConfig } from 'payload'
 import { withAccessControl, withUserAuditFields } from '@/payload/lib/helpers/collection.helpers'
 import { validateAttendantTrainingUniqueness } from '@/payload/collections/attendant-trainings/validations'
+import { deleteCertificateFile } from '@/payload/collections/attendant-trainings/hooks'
 
 export const AttendantTrainings: CollectionConfig = withUserAuditFields(
   withAccessControl({
@@ -8,6 +9,9 @@ export const AttendantTrainings: CollectionConfig = withUserAuditFields(
     labels: {
       singular: 'Certificado',
       plural: 'Certificados',
+    },
+    hooks: {
+      afterDelete: [deleteCertificateFile]
     },
     fields: [
       {
