@@ -16,6 +16,12 @@ import {
 export const importHandler: PayloadHandler = async (req) => {
   await addDataAndFileToRequest(req)
 
+  if (!req.user) {
+    throw new APIError('No tienes permiso para realizar esta acción', 401)
+  } else if (req.user.role !== 'admin') {
+    throw new APIError('No tienes permiso para realizar esta acción', 403)
+  }
+
   if (!req.file) {
     return Response.json({ error: 'No se ha proporcionado un archivo' }, { status: 400 })
   }
