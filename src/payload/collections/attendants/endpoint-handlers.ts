@@ -52,8 +52,6 @@ export const importHandler: PayloadHandler = async (req) => {
     data.phone = row['telefono'] || row['TELEFONO'] || row['Telefono']
     data.email = row['email'] || row['EMAIL'] || row['Email']
 
-    // TODO: check for a training code and if it does exist look up for the training and bind it
-
     const exist = await req.payload.db.findOne({
       collection: 'attendants',
       where: { firstName: { equals: data.firstName }, lastName: { equals: data.lastName } },
@@ -65,11 +63,24 @@ export const importHandler: PayloadHandler = async (req) => {
     }
 
     try {
-      await req.payload.create({
-        collection: 'attendants',
-        data: data,
-        req,
-      })
+      const attendant = await req.payload.create({ collection: 'attendants', data: data, req })
+      const trainingCode = row['formacion'] || row['Formacion'] || row['FORMACION']
+      if (trainingCode) {
+        const training = await req.payload.db.findOne<Training>({
+          collection: 'trainings',
+          where: { code: { equals: trainingCode } },
+        })
+        if (training) {
+          await req.payload.create({
+            collection: 'attendant-trainings',
+            data: {
+              attendant: attendant.id,
+              training: training.id
+            },
+            req
+          })
+        }
+      }
       results.created++
     } catch (err: any) {
       results.failed++
@@ -80,6 +91,11 @@ export const importHandler: PayloadHandler = async (req) => {
   return Response.json(results)
 }
 
+/**
+ * Descarga el certificado del participante con el código proporcionado. Si el certificado no
+ * existe se genera uno.
+ * @param req
+ */
 export const downloadCertificate: PayloadHandler = async (req) => {
   if (!req.user) {
     throw new APIError('No estás autorizado a realizar esta acción', 401)
@@ -125,5 +141,4 @@ export const downloadCertificate: PayloadHandler = async (req) => {
     const certificate = attendantTraining.certificate as Media
     return Response.redirect(certificate.url!)
   }
-
 }
