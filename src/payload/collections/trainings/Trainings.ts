@@ -1,6 +1,7 @@
 import { CollectionConfig } from 'payload'
 import { withAccessControl, withUserAuditFields } from '@/payload/lib/helpers/collection.helpers'
 import { validateEndDate, validateStartDate } from '@/payload/collections/trainings/validations'
+import { randomId } from '@/payload/lib/utils'
 
 export const Trainings: CollectionConfig = withUserAuditFields(
   withAccessControl({
@@ -14,13 +15,14 @@ export const Trainings: CollectionConfig = withUserAuditFields(
     },
     fields: [
       {
-        name: 'code', /*TODO: generate a default value for this field */
+        name: 'code',
         label: 'Código de la formación',
         type: 'text',
         minLength: 1,
         maxLength: 8,
         required: true,
-        unique: true
+        unique: true,
+        defaultValue: () => randomId()
       },
       {
         name: 'title',
@@ -54,6 +56,37 @@ export const Trainings: CollectionConfig = withUserAuditFields(
         validate: validateEndDate,
         admin: { date: { pickerAppearance: 'dayOnly' } },
       },
+      {
+        name: 'signatories',
+        label: 'Firmantes de los certificados',
+        type: 'array',
+        required: false,
+        maxRows: 4,
+        fields: [
+          {
+            name: 'name',
+            label: 'Nombre del firmante',
+            type: 'text',
+            required: true
+          },
+          {
+            name: 'role',
+            label: 'Cargo del firmante',
+            type: 'text',
+            required: true
+          },
+          {
+            name: 'signature',
+            label: 'Firma escaneada',
+            type: 'upload',
+            relationTo: 'media',
+            required: true,
+            filterOptions: {
+              mimeType: { contains: 'image' }
+            }
+          }
+        ]
+      }
     ],
   }),
 )

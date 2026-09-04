@@ -11,6 +11,7 @@ export async function findAttendantByCode(attendantCode: string, req: PayloadReq
     collection: 'attendants',
     where: { code: { equals: attendantCode } },
     limit: 1,
+    depth: 3,
     select: { createdBy: false, updatedBy: false },
     joins: {
       trainings: {
@@ -21,6 +22,7 @@ export async function findAttendantByCode(attendantCode: string, req: PayloadReq
     populate: {
       'attendant-trainings': { attendant: false, createdBy: false, updatedBy: false },
       trainings: { createdBy: false, updatedBy: false },
+      media: { createdBy: false, updatedBy: false }
     },
   })
 }

@@ -179,10 +179,39 @@ export interface Training {
   placement: string;
   startDate?: string | null;
   endDate?: string | null;
+  signatories?:
+    | {
+        name: string;
+        role: string;
+        signature: string | Media;
+        id?: string | null;
+      }[]
+    | null;
   createdBy?: (string | null) | User;
   updatedBy?: (string | null) | User;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  alt?: string | null;
+  createdBy?: (string | null) | User;
+  updatedBy?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -215,27 +244,6 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  alt?: string | null;
-  createdBy?: (string | null) | User;
-  updatedBy?: (string | null) | User;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -388,6 +396,14 @@ export interface TrainingsSelect<T extends boolean = true> {
   placement?: T;
   startDate?: T;
   endDate?: T;
+  signatories?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        signature?: T;
+        id?: T;
+      };
   createdBy?: T;
   updatedBy?: T;
   updatedAt?: T;

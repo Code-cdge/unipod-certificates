@@ -123,12 +123,12 @@ export const downloadCertificate: PayloadHandler = async (req) => {
 
   const attendantTraining = attendant.trainings.docs[0] as AttendantTraining
 
-  // if (!attendantTraining.certificate) {
+  if (!attendantTraining.certificate) {
     const certificate = generateCertificate(attendant)
     const buffer = await certificate.getBuffer()
-    /*const uploaded = await uploadAttendantCertificate(attendant, buffer, req)
+    const uploaded = await uploadAttendantCertificate(attendant, buffer, req)
     const training = attendantTraining.training as Training
-    await updateAttendantTrainingCertificate(attendant.id, training.id, uploaded.id, req)*/
+    await updateAttendantTrainingCertificate(attendant.id, training.id, uploaded.id, req)
 
     return new Response(buffer, {
       headers: {
@@ -137,8 +137,8 @@ export const downloadCertificate: PayloadHandler = async (req) => {
         'Content-Length': buffer.length.toString(),
       },
     })
-  /*} else {
+  } else {
     const certificate = attendantTraining.certificate as Media
     return Response.redirect(certificate.url!)
-  }*/
+  }
 }
