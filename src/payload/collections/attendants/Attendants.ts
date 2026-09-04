@@ -113,6 +113,7 @@ export const Attendants: CollectionConfig = withUserAuditFields(
         type: 'join',
         collection: 'attendant-trainings',
         on: 'attendant',
+        maxDepth: 2
       },
     ],
   }),

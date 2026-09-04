@@ -1,8 +1,13 @@
 import { addDataAndFileToRequest, APIError, PayloadHandler } from 'payload'
 import * as XLSX from 'xlsx'
-import { Attendant } from '@/payload-types'
+import { Attendant, AttendantTraining, Media, Training } from '@/payload-types'
 import { randomId } from '@/payload/lib/utils'
 import { generateCertificate } from '@/payload/lib/services/generate-certificate'
+import {
+  findAttendantByCode,
+  updateAttendantTrainingCertificate,
+  uploadAttendantCertificate,
+} from '@/payload/collections/attendants/queries'
 
 /**
  * Procesa un archivo excel/csv para importar registros de participantes
@@ -47,6 +52,8 @@ export const importHandler: PayloadHandler = async (req) => {
     data.phone = row['telefono'] || row['TELEFONO'] || row['Telefono']
     data.email = row['email'] || row['EMAIL'] || row['Email']
 
+    // TODO: check for a training code and if it does exist look up for the training and bind it
+
     const exist = await req.payload.db.findOne({
       collection: 'attendants',
       where: { firstName: { equals: data.firstName }, lastName: { equals: data.lastName } },
@@ -80,18 +87,7 @@ export const downloadCertificate: PayloadHandler = async (req) => {
 
   const attendantCode = req.routeParams?.code as string
 
-  const find = await req.payload.find({
-    collection: 'attendants',
-    where: { 'code': { equals: attendantCode.trim() } },
-    limit: 1,
-    select: { createdBy: false, updatedBy: false},
-    joins: {
-      trainings: {
-        sort: '-createdAt', // se descarga siempre el certificado más reciente
-        limit: 1
-      }
-    }
-  })
+  const find = await findAttendantByCode(attendantCode, req)
 
   if (find.docs.length === 0) {
     throw new APIError(
@@ -100,36 +96,34 @@ export const downloadCertificate: PayloadHandler = async (req) => {
     )
   }
 
-  const attendant = find.docs[0];
+  const attendant = find.docs[0]
 
   if (!attendant.trainings?.docs?.length) {
-    throw new APIError('Esta persona no está registrado como participante en ninguna formación', 422)
+    throw new APIError(
+      'Esta persona no está registrado como participante en ninguna formación',
+      422,
+    )
   }
 
-  /*const attendantTraining = attendant.trainings.docs[0] as AttendantTraining;
+  const attendantTraining = attendant.trainings.docs[0] as AttendantTraining
 
   if (!attendantTraining.certificate) {
-    const certificate = await generateCertificate(attendant).getBuffer();
-    return new Response(certificate, {
+    const certificate = generateCertificate(attendant)
+    const buffer = await certificate.getBuffer()
+    const uploaded = await uploadAttendantCertificate(attendant, buffer, req)
+    const training = attendantTraining.training as Training
+    await updateAttendantTrainingCertificate(attendant.id, training.id, uploaded.id, req)
+
+    return new Response(buffer, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="certificado.pdf"`,
-        'Content-Length': certificate.length.toString(),
-      }
+        'Content-Length': buffer.length.toString(),
+      },
     })
   } else {
-    // todo: descargar el certificado existente
-    const certificate = attendantTraining.certificate as Media;
+    const certificate = attendantTraining.certificate as Media
+    return Response.redirect(certificate.url!)
   }
 
-  return Response.json(find.docs)*/
-
-  const certificate = await generateCertificate(attendant).getBuffer()
-  return new Response(certificate, {
-    headers: {
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="certificado.pdf"`,
-      'Content-Length': certificate.length.toString(),
-    },
-  })
 }
