@@ -2,6 +2,7 @@ import { CollectionConfig } from 'payload'
 import { withAccessControl, withUserAuditFields } from '@/payload/lib/helpers/collection.helpers'
 import { validateEndDate, validateStartDate } from '@/payload/collections/trainings/validations'
 import { randomId } from '@/payload/lib/utils'
+import { deleteAttendants, deleteSignatures } from '@/payload/collections/trainings/hooks'
 
 export const Trainings: CollectionConfig = withUserAuditFields(
   withAccessControl({
@@ -12,6 +13,10 @@ export const Trainings: CollectionConfig = withUserAuditFields(
     },
     admin: {
       useAsTitle: 'code',
+    },
+    hooks: {
+      beforeDelete: [deleteAttendants],
+      afterDelete: [deleteSignatures]
     },
     fields: [
       {
