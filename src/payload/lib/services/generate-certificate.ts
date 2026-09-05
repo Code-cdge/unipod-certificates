@@ -25,5 +25,4 @@ export function generateCertificate(attendant: Attendant): pdfMake.TCreatedPdf {
 
   pdfMake.addFonts(PDF_MAKE_FONTS)
   return pdfMake.createPdf(document)
-
 }

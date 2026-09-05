@@ -1,4 +1,7 @@
 {
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
   "npm.packageManager": "pnpm",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[typescript]": {

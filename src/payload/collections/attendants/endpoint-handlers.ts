@@ -82,15 +82,15 @@ export const downloadCertificate: PayloadHandler = async (req) => {
 
   const find = await req.payload.find({
     collection: 'attendants',
-    where: { 'code': { equals: attendantCode.trim() } },
+    where: { code: { equals: attendantCode.trim() } },
     limit: 1,
-    select: { createdBy: false, updatedBy: false},
+    select: { createdBy: false, updatedBy: false },
     joins: {
       trainings: {
         sort: '-createdAt', // se descarga siempre el certificado más reciente
-        limit: 1
-      }
-    }
+        limit: 1,
+      },
+    },
   })
 
   if (find.docs.length === 0) {
@@ -100,10 +100,13 @@ export const downloadCertificate: PayloadHandler = async (req) => {
     )
   }
 
-  const attendant = find.docs[0];
+  const attendant = find.docs[0]
 
   if (!attendant.trainings?.docs?.length) {
-    throw new APIError('Esta persona no está registrado como participante en ninguna formación', 422)
+    throw new APIError(
+      'Esta persona no está registrado como participante en ninguna formación',
+      422,
+    )
   }
 
   /*const attendantTraining = attendant.trainings.docs[0] as AttendantTraining;
