@@ -5,6 +5,7 @@ import {
   deleteCertificateFileAfterChange,
   deleteCertificateFileAfterDelete,
 } from '@/payload/collections/attendant-trainings/hooks'
+import { generateCertificateEndpoint } from '@/payload/collections/attendant-trainings/endpoints'
 
 export const AttendantTrainings: CollectionConfig = withUserAuditFields(
   withAccessControl({
@@ -13,9 +14,19 @@ export const AttendantTrainings: CollectionConfig = withUserAuditFields(
       singular: 'Certificado',
       plural: 'Certificados',
     },
+    admin: {
+      components: {
+        edit: {
+          beforeDocumentControls: [
+            '/payload/collections/attendant-trainings/components.tsx#GenerateCertificate',
+          ],
+        },
+      },
+    },
+    endpoints: [generateCertificateEndpoint],
     hooks: {
       afterDelete: [deleteCertificateFileAfterDelete],
-      afterChange: [deleteCertificateFileAfterChange]
+      afterChange: [deleteCertificateFileAfterChange],
     },
     fields: [
       {
@@ -25,7 +36,7 @@ export const AttendantTrainings: CollectionConfig = withUserAuditFields(
         relationTo: 'attendants',
         required: true,
         access: { update: () => false }, // no se puede modificar este campo una vez creado
-        validate: validateAttendantTrainingUniqueness
+        validate: validateAttendantTrainingUniqueness,
       },
       {
         name: 'training',
@@ -34,7 +45,7 @@ export const AttendantTrainings: CollectionConfig = withUserAuditFields(
         relationTo: 'trainings',
         required: true,
         access: { update: () => false }, // no se puede modificar este campo una vez creado
-        validate: validateAttendantTrainingUniqueness
+        validate: validateAttendantTrainingUniqueness,
       },
       {
         name: 'certificate',
