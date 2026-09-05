@@ -12,6 +12,7 @@ import { Attendants } from '@/payload/collections/attendants/Attendants'
 import { AttendantTrainings } from '@/payload/collections/attendant-trainings/AttendantTrainings'
 import { es } from '@payloadcms/translations/languages/es'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -58,5 +59,15 @@ export default buildConfig({
       },
     },
   }),
-  plugins: [],
+  plugins: [
+    vercelBlobStorage({
+      enabled: process.env.NODE_ENV === 'production',
+      // Specify which collections should use Vercel Blob
+      collections: {
+        media: true,
+      },
+      // Token provided by Vercel once Blob storage is added to your Vercel project
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
+  ],
 })
