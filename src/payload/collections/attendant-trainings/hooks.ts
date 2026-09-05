@@ -1,7 +1,7 @@
-import { CollectionAfterDeleteHook } from 'payload'
+import { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 import { AttendantTraining } from '@/payload-types'
 
-export const deleteCertificateFile: CollectionAfterDeleteHook<AttendantTraining> = async ({
+export const deleteCertificateFileAfterDelete: CollectionAfterDeleteHook<AttendantTraining> = async ({
   doc,
   req,
 }) => {
@@ -14,4 +14,23 @@ export const deleteCertificateFile: CollectionAfterDeleteHook<AttendantTraining>
       req,
     })
   }
+}
+
+export const deleteCertificateFileAfterChange: CollectionAfterChangeHook<AttendantTraining> = async ({previousDoc, doc, req}) => {
+
+  if (previousDoc) {
+
+    const previousCertificateId = typeof  previousDoc.certificate === 'string' ? previousDoc.certificate : previousDoc.certificate?.id
+    const newCertificateId = typeof doc.certificate === 'string' ? doc.certificate : doc.certificate?.id;
+
+    if (previousCertificateId && (previousCertificateId !== newCertificateId)) {
+      await req.payload.delete({
+        collection: 'media',
+        where: { id: { equals: previousCertificateId } },
+        req,
+      })
+    }
+
+  }
+
 }

@@ -27,6 +27,30 @@ export async function findAttendantByCode(attendantCode: string, req: PayloadReq
   })
 }
 
+export async function findAttendantById(req: PayloadRequest, attendantId: string, attendantTrainingId?: string) {
+  return req.payload.find({
+    collection: 'attendants',
+    where: { id: { equals: attendantId } },
+    limit: 1,
+    depth: 3,
+    select: { createdBy: false, updatedBy: false },
+    joins: {
+      trainings: !attendantTrainingId ? {
+        sort: '-createdAt', // se descarga siempre el certificado más reciente
+        limit: 1,
+      } : {
+        where: { id: { equals: attendantTrainingId } },
+      },
+    },
+    populate: {
+      'attendant-trainings': { attendant: false, createdBy: false, updatedBy: false },
+      trainings: { createdBy: false, updatedBy: false },
+      media: { createdBy: false, updatedBy: false },
+    },
+  })
+}
+
+
 /**
  * Sube un archivo de certificado a la colección media
  * @param attendant
@@ -66,3 +90,13 @@ export async function updateAttendantTrainingCertificate(attendantId: string, tr
     req,
   })
 }
+
+export async function updateAttendantTrainingCertificateById(attendantTrainingId: string, certificateId: string, req: PayloadRequest) {
+  return req.payload.update({
+    collection: 'attendant-trainings',
+    where: { id: { equals: attendantTrainingId } },
+    data: { certificate: certificateId },
+    req,
+  })
+}
+

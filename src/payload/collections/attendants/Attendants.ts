@@ -37,8 +37,8 @@ export const Attendants: CollectionConfig = withUserAuditFields(
       {
         path: '/:code/download-certificate',
         method: 'get',
-        handler: downloadCertificate
-      }
+        handler: downloadCertificate,
+      },
     ],
     fields: [
       {
@@ -49,7 +49,7 @@ export const Attendants: CollectionConfig = withUserAuditFields(
         maxLength: 8,
         required: true,
         unique: true,
-        defaultValue: () => randomId()
+        defaultValue: () => randomId(),
       },
       {
         name: 'firstName',
@@ -120,7 +120,8 @@ export const Attendants: CollectionConfig = withUserAuditFields(
         type: 'join',
         collection: 'attendant-trainings',
         on: 'attendant',
-        maxDepth: 3
+        maxDepth: 3,
+      
       },
     ],
   }),
