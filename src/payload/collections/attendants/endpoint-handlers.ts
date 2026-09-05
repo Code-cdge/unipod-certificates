@@ -105,7 +105,9 @@ export const downloadCertificate: PayloadHandler = async (req) => {
 
   const attendantCode = req.routeParams?.code as string
 
+
   const find = await findAttendantByCode(attendantCode, req)
+
 
   if (find.docs.length === 0) {
     throw new APIError(
