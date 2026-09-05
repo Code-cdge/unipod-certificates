@@ -1,7 +1,11 @@
 import { CollectionConfig } from 'payload'
 import { withAccessControl, withUserAuditFields } from '@/payload/lib/helpers/collection.helpers'
 import { validateAttendantTrainingUniqueness } from '@/payload/collections/attendant-trainings/validations'
-import { deleteCertificateFile } from '@/payload/collections/attendant-trainings/hooks'
+import {
+  deleteCertificateFileAfterChange,
+  deleteCertificateFileAfterDelete,
+} from '@/payload/collections/attendant-trainings/hooks'
+import { generateCertificateEndpoint } from '@/payload/collections/attendant-trainings/endpoints'
 
 export const AttendantTrainings: CollectionConfig = withUserAuditFields(
   withAccessControl({
@@ -10,8 +14,19 @@ export const AttendantTrainings: CollectionConfig = withUserAuditFields(
       singular: 'Certificado',
       plural: 'Certificados',
     },
+    admin: {
+      components: {
+        edit: {
+          beforeDocumentControls: [
+            '/payload/collections/attendant-trainings/components.tsx#GenerateCertificate',
+          ],
+        },
+      },
+    },
+    endpoints: [generateCertificateEndpoint],
     hooks: {
-      afterDelete: [deleteCertificateFile]
+      afterDelete: [deleteCertificateFileAfterDelete],
+      afterChange: [deleteCertificateFileAfterChange],
     },
     fields: [
       {
@@ -21,7 +36,7 @@ export const AttendantTrainings: CollectionConfig = withUserAuditFields(
         relationTo: 'attendants',
         required: true,
         access: { update: () => false }, // no se puede modificar este campo una vez creado
-        validate: validateAttendantTrainingUniqueness
+        validate: validateAttendantTrainingUniqueness,
       },
       {
         name: 'training',
@@ -30,7 +45,7 @@ export const AttendantTrainings: CollectionConfig = withUserAuditFields(
         relationTo: 'trainings',
         required: true,
         access: { update: () => false }, // no se puede modificar este campo una vez creado
-        validate: validateAttendantTrainingUniqueness
+        validate: validateAttendantTrainingUniqueness,
       },
       {
         name: 'certificate',
