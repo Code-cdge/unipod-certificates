@@ -5,7 +5,10 @@ import {
   deleteCertificateFileAfterChange,
   deleteCertificateFileAfterDelete,
 } from '@/payload/collections/attendant-trainings/hooks'
-import { generateCertificateEndpoint } from '@/payload/collections/attendant-trainings/endpoints'
+import {
+  downloadCertificatesEndpoint,
+  generateCertificateEndpoint,
+} from '@/payload/collections/attendant-trainings/endpoints'
 
 export const AttendantTrainings: CollectionConfig = withUserAuditFields(
   withAccessControl({
@@ -18,12 +21,15 @@ export const AttendantTrainings: CollectionConfig = withUserAuditFields(
       components: {
         edit: {
           beforeDocumentControls: [
-            '/payload/collections/attendant-trainings/components.tsx#GenerateCertificate',
+            '/payload/collections/attendant-trainings/components/GenerateCertificate.tsx',
           ],
         },
+        beforeListTable: [
+          '/payload/collections/attendant-trainings/components/DownloadCertificates.tsx',
+        ],
       },
     },
-    endpoints: [generateCertificateEndpoint],
+    endpoints: [generateCertificateEndpoint, downloadCertificatesEndpoint],
     hooks: {
       afterDelete: [deleteCertificateFileAfterDelete],
       afterChange: [deleteCertificateFileAfterChange],

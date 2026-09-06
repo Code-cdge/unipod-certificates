@@ -4,7 +4,7 @@ import { useDocumentInfo, Button, toast, LoadingOverlay } from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-export function GenerateCertificate() {
+export default function GenerateCertificate() {
   const { id, collectionSlug, data } = useDocumentInfo()
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)

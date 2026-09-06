@@ -1,5 +1,7 @@
 import { PayloadRequest } from 'payload'
 import { Attendant, Training } from '@/payload-types'
+import { slugify } from '@/payload/lib/utils'
+// import { slugify } from 'payload/shared'
 
 /**
  * Encuentra un participante por su código
@@ -63,7 +65,7 @@ export async function uploadAttendantCertificate(attendant: Attendant, certifica
     data: { alt: `Certificado de ${attendant.fullName}` },
     file: {
       data: certificate,
-      name: `certificado_${attendant.id}.pdf`,
+      name: `certificado_${slugify(attendant.fullName!)}_${attendant.code}.pdf`,
       mimetype: 'application/pdf',
       size: certificate.length,
     },
