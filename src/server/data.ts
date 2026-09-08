@@ -1,3 +1,4 @@
+import 'server-only'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Attendant, AttendantTraining } from '@/lib/types'
@@ -19,13 +20,13 @@ export async function getAttendantByCode(code: string): Promise<Attendant | null
 }
 
 export async function getParticipanteCertificados(
-  participanteId: string,
+  attendantId: string,
 ): Promise<AttendantTraining[]> {
   const payload = await getPayload({ config })
 
   const result = await payload.find({
     collection: 'attendant-trainings',
-    where: { attendant: { equals: participanteId } },
+    where: { attendant: { equals: attendantId } },
     depth: 1,
   })
 
