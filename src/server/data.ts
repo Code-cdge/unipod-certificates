@@ -19,9 +19,7 @@ export async function getAttendantByCode(code: string): Promise<Attendant | null
   }
 }
 
-export async function getParticipanteCertificados(
-  attendantId: string,
-): Promise<AttendantTraining[]> {
+export async function getAttendantTrainings(attendantId: string): Promise<AttendantTraining[]> {
   const payload = await getPayload({ config })
 
   const result = await payload.find({
@@ -32,7 +30,8 @@ export async function getParticipanteCertificados(
 
   return result.docs.map((c: any) => ({
     title: c.training.title,
-    placement: c.training.placement,
+    description: c.training.description,
+    workload: c.training.workload,
     certificateUrl: c.certificate.url,
   }))
 }

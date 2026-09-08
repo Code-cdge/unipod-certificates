@@ -5,6 +5,7 @@ export interface Attendant {
 
 export interface AttendantTraining {
   title: string
-  placement: string
+  description: string
+  workload: number
   certificateUrl: string
 }

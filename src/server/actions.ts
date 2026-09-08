@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { getAttendantByCode } from './data'
 
 export async function verificarCodigo(code: string) {
+  if (!code) redirect('/verificar?error=vacio')
   const attendant = await getAttendantByCode(code)
   if (!attendant) redirect('/verificar?error=no-encontrado')
 
