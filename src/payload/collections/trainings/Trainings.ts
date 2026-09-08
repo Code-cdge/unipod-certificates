@@ -9,14 +9,14 @@ export const Trainings: CollectionConfig = withUserAuditFields(
     slug: 'trainings',
     labels: {
       plural: 'Formaciones',
-      singular: 'Formación'
+      singular: 'Formación',
     },
     admin: {
       useAsTitle: 'code',
     },
     hooks: {
       beforeDelete: [deleteAttendants],
-      afterDelete: [deleteSignatures]
+      afterDelete: [deleteSignatures],
     },
     fields: [
       {
@@ -27,11 +27,19 @@ export const Trainings: CollectionConfig = withUserAuditFields(
         maxLength: 8,
         required: true,
         unique: true,
-        defaultValue: () => randomId()
+        defaultValue: () => randomId(),
       },
       {
         name: 'title',
         label: 'Título de la formación',
+        type: 'text',
+        minLength: 1,
+        maxLength: 256,
+        required: true,
+      },
+      {
+        name: 'description',
+        label: 'Objetivo de la formación',
         type: 'text',
         minLength: 1,
         maxLength: 256,
@@ -43,42 +51,66 @@ export const Trainings: CollectionConfig = withUserAuditFields(
         type: 'text',
         minLength: 1,
         maxLength: 256,
+        required: false,
+      },
+      {
+        name: 'workload',
+        label: 'Carga horaria (número de horas lectivas)',
+        type: 'number',
+        min: 0,
         required: true,
       },
       {
-        name: 'startDate',
-        label: 'Fecha de apertura',
-        type: 'date',
-        required: false,
-        validate: validateStartDate,
-        admin: { date: { pickerAppearance: 'dayOnly' } },
+        type: 'row',
+        fields: [
+          {
+            name: 'startDate',
+            label: 'Fecha de apertura',
+            type: 'date',
+            required: false,
+            validate: validateStartDate,
+            admin: { date: { pickerAppearance: 'default' } },
+          },
+          {
+            name: 'endDate',
+            label: 'Fecha de clausura',
+            type: 'date',
+            required: false,
+            validate: validateEndDate,
+            admin: { date: { pickerAppearance: 'default' } },
+          },
+        ],
       },
       {
-        name: 'endDate',
-        label: 'Fecha de clausura',
+        name: 'graduationDate',
+        label: 'Fecha del certificado',
         type: 'date',
         required: false,
-        validate: validateEndDate,
-        admin: { date: { pickerAppearance: 'dayOnly' } },
+        admin: { date: { pickerAppearance: 'default' } },
       },
       {
         name: 'signatories',
         label: 'Firmantes de los certificados',
         type: 'array',
         required: false,
-        maxRows: 4,
+        maxRows: 3,
         fields: [
           {
-            name: 'name',
-            label: 'Nombre del firmante',
-            type: 'text',
-            required: true
-          },
-          {
-            name: 'role',
-            label: 'Cargo del firmante',
-            type: 'text',
-            required: true
+            type: 'row',
+            fields: [
+              {
+                name: 'name',
+                label: 'Nombre del firmante',
+                type: 'text',
+                required: true,
+              },
+              {
+                name: 'role',
+                label: 'Cargo del firmante',
+                type: 'text',
+                required: true,
+              },
+            ],
           },
           {
             name: 'signature',
@@ -87,11 +119,11 @@ export const Trainings: CollectionConfig = withUserAuditFields(
             relationTo: 'media',
             required: true,
             filterOptions: {
-              mimeType: { contains: 'image' }
-            }
-          }
-        ]
-      }
+              mimeType: { contains: 'image' },
+            },
+          },
+        ],
+      },
     ],
   }),
 )
