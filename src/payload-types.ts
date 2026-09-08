@@ -176,9 +176,12 @@ export interface Training {
   id: string;
   code: string;
   title: string;
-  placement: string;
+  description: string;
+  placement?: string | null;
+  workload: number;
   startDate?: string | null;
   endDate?: string | null;
+  graduationDate?: string | null;
   signatories?:
     | {
         name: string;
@@ -393,9 +396,12 @@ export interface MediaSelect<T extends boolean = true> {
 export interface TrainingsSelect<T extends boolean = true> {
   code?: T;
   title?: T;
+  description?: T;
   placement?: T;
+  workload?: T;
   startDate?: T;
   endDate?: T;
+  graduationDate?: T;
   signatories?:
     | T
     | {

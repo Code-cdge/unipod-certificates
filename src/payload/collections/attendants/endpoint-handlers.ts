@@ -127,7 +127,7 @@ export const downloadCertificate: PayloadHandler = async (req) => {
 
   const attendantTraining = attendant.trainings.docs[0] as AttendantTraining
 
-  // if (!attendantTraining.certificate) {
+  if (!attendantTraining.certificate) {
     const certificate = generateCertificate(attendant)
     const buffer = await certificate.getBuffer()
     const uploaded = await uploadAttendantCertificate(attendant, buffer, req)
@@ -141,8 +141,8 @@ export const downloadCertificate: PayloadHandler = async (req) => {
         'Content-Length': buffer.length.toString(),
       },
     })
-  /*} else {
+  } else {
     const certificate = attendantTraining.certificate as Media
     return Response.redirect(certificate.url!)
-  }*/
+  }
 }

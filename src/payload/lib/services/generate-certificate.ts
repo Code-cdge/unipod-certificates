@@ -1,27 +1,37 @@
 import { Attendant, AttendantTraining, Media, Training } from '@/payload-types'
-import { TDocumentDefinitions, TableCell, TCreatedPdf, ImageDefinition } from 'pdfmake/interfaces'
+import {
+  TDocumentDefinitions,
+  TCreatedPdf,
+  ImageDefinition,
+  Content,
+  TableCell,
+  Column,
+} from 'pdfmake/interfaces'
 import pdfMake from 'pdfmake'
 import { PDF_MAKE_FONTS } from '@/payload/lib/constants'
 import path from 'path'
 
 export function generateCertificate(attendant: Attendant): TCreatedPdf {
   const training = (attendant.trainings!.docs as AttendantTraining[])![0].training as Training
-  const signatureCells: TableCell[] = []
+  const signatureCells: Column[] = []
   const signatures: Record<string, ImageDefinition> = {}
 
   if (training.signatories && training.signatories.length > 0) {
-    training.signatories.forEach((signatory) => {
+    training.signatories.forEach((signatory, index) => {
       const signature = signatory.signature as Media
       signatures[signature.id] = { url: signature.url! }
+      if (index > 0) { // add even space before each item after the first one
+        signatureCells.push({width: '*', text: ''})
+      }
       signatureCells.push({
-        fillColor: 'white',
         style: { fontSize: 10 },
+        width: 250,
         stack: [
           { image: signature.id, fit: [150, 150], alignment: 'center', marginTop: 5 },
           {
-            text: '                                        ',
+            text: '                                                                      ',
             decoration: 'overline',
-            decorationColor: '#ae9b7a'
+            decorationColor: '#ae9b7a',
           },
           { text: `${signatory.name}`.toUpperCase(), alignment: 'center', bold: true },
           { text: `${signatory.role}`.toUpperCase(), alignment: 'center', marginBottom: 5 },
@@ -123,20 +133,14 @@ export function generateCertificate(attendant: Attendant): TCreatedPdf {
               'POR SU ASISTENCIA Y PARTICIPACIÓN EN LA ',
               { text: `${training.title} `.toUpperCase(), bold: true },
               'CON UNA CARGA HORARIA TOTAL DE ',
-              { text: `18 HORAS `, bold: true },
-              { text: `18 HORAS `, bold: true },
+              { text: `${training.workload} HORAS `, bold: true },
               ' LECTIVAS, HABIENDO COMPLETADO SATISFACTORIAMENTE EL PROGRAMA FORMATIVO ORIENTADO AL ',
-              'DESARROLLO DE COMPETENCIAS, HERRAMIENTAS Y HABILIDADES PRÁCTICAS EN EL ÁMBITO TECNOLÓGICO Y CREATIVO',
+              `${training.description}`.toUpperCase(),
             ],
           },
           {
             marginTop: 20,
-            layout: 'noBorders',
-            style: { fontSize: 14 },
-            table: {
-              widths: signatureCells.map(() => '*'),
-              body: [signatureCells],
-            },
+            columns: signatureCells
           },
         ],
       },

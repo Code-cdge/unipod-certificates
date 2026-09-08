@@ -20,10 +20,4 @@ export const PDF_MAKE_FONTS: TFontDictionary = {
     italics: path.join(process.cwd(), 'public/assets/fonts/ariblk.ttf'),
     bolditalics: path.join(process.cwd(), 'public/assets/fonts/ariblk.ttf'),
   },
-  Courier: {
-    normal: path.join(process.cwd(), 'public/assets/fonts/cour.ttf'),
-    bold: path.join(process.cwd(), 'public/assets/fonts/courbd.ttf'),
-    italics: path.join(process.cwd(), 'public/assets/fonts/couri.ttf'),
-    bolditalics: path.join(process.cwd(), 'public/assets/fonts/courbi.ttf'),
-  }
 }
