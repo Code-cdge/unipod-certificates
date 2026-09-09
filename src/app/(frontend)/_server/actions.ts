@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { getAttendantByCode } from '@/app/(frontend)/_server/data'
 import { codeSchema } from '@/lib/schemas'
 import { ATTENDANT_COOKIE_MAX_AGE_SECONDS, ATTENDANT_COOKIE_NAME } from '@/lib/constants'
-import { verifyHuman } from '@/lib/turnstile'
+import { verifyHuman } from '@/app/(frontend)/_server/turnstile'
 
 type FieldErrors = Record<string, { message: string }>
 type VerifyResult = { success: true } | { success: false; fieldErrors: FieldErrors }
