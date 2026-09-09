@@ -28,8 +28,6 @@ export async function getAttendantTrainings(attendantId: string): Promise<Attend
     depth: 1,
   })
 
-  throw new Error('Failed to fetch certificates')
-
   return result.docs.map((c: any) => ({
     title: c.training.title,
     description: c.training.description,
