@@ -1,37 +1,35 @@
 'use client'
 
-import { SectionTitle } from '@/components/shared/section-title'
-import { Card, CardContent } from '@/components/ui/card'
-import { CircleQuestionMark, Loader2, ShieldKeyhole } from 'lucide-react'
-import { useTransition } from 'react'
-import { useForm, revalidateLogic } from '@tanstack/react-form'
-import { useRouter } from 'next/navigation'
-import z from 'zod'
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { useForm } from '@tanstack/react-form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Card, CardContent } from '@/components/ui/card'
 import { HeroPattern } from '@/components/shared/hero-pattern'
+import { SectionTitle } from '@/components/shared/section-title'
+import { formOptions, revalidateLogic } from '@tanstack/react-form'
+import { CircleQuestionMark, Loader2, ShieldKeyhole } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { codeSchema } from '@/lib/schemas'
+import { verifyCode } from '../verify/actions'
 
-const codeSchema = z.object({
-  code: z.string(),
+const formOpts = formOptions({
+  defaultValues: { code: '' },
+  validators: {
+    onDynamic: codeSchema,
+  },
+  validationLogic: revalidateLogic({
+    mode: 'submit',
+    modeAfterSubmission: 'change',
+  }),
 })
 
 export function Verifyform() {
-  const router = useRouter()
-  const [isNavigate, startTransition] = useTransition()
-
   const form = useForm({
-    defaultValues: { code: '' },
-    validators: { onDynamic: codeSchema },
-    validationLogic: revalidateLogic({
-      mode: 'submit',
-      modeAfterSubmission: 'change',
-    }),
-    onSubmit: ({ value }) => {
-      startTransition(() => {
-        router.push(`/certificate?code=${encodeURIComponent(value.code)}`)
-      })
+    ...formOpts,
+    onSubmit: async ({ value }) => {
+      const result = await verifyCode(value.code)
+      if (!result.success) return { field: result.fieldErrors }
     },
   })
 
@@ -46,8 +44,8 @@ export function Verifyform() {
             <ShieldKeyhole className="size-8 text-primary-foreground" />
           </div>
           <SectionTitle
-            title="Acceder a mi Certificado"
-            description="Ingrese su codigo unico asignado para acceder a su certificado"
+            title="Acceder a mis Certificado"
+            description="Ingrese su codigo unico asignado para acceder a sus certificado"
           />
           <Card className="w-full max-w-lg mx-auto bg-card/80 backdrop-blur-md ring-foreground/15 ring-1">
             <CardContent>
@@ -58,35 +56,43 @@ export function Verifyform() {
                   form.handleSubmit()
                 }}
               >
-                <FieldGroup>
-                  <Field>
-                    <FieldLabel>Código de verificación</FieldLabel>
-                    <form.Field name="code">
-                      {(field) => (
-                        <Input
-                          id={field.name}
-                          value={field.state.value}
-                          onBlur={field.handleBlur}
-                          placeholder="Ingrese su código de verificación..."
-                          onChange={(e) => field.handleChange(e.target.value)}
-                        />
-                      )}
-                    </form.Field>
-                    <form.Subscribe selector={(state) => state}>
-                      {({ isSubmitting, isDefaultValue }) => (
-                        <Button type="submit" disabled={isSubmitting || isDefaultValue}>
-                          {isSubmitting || isNavigate ? (
-                            <>
-                              <Loader2 className="animate-spin" />
-                              Verificando...
-                            </>
-                          ) : (
-                            'Verificar'
+                <FieldGroup className="gap-4">
+                  <form.Field name="code">
+                    {(field) => {
+                      const error = field.state.meta.errors[0]
+                      return (
+                        <Field>
+                          <FieldLabel>Código de verificación</FieldLabel>
+                          <Input
+                            aria-invalid={!!error}
+                            value={field.state.value}
+                            onBlur={field.handleBlur}
+                            placeholder="Ingrese su código de verificación..."
+                            onChange={(e) => field.handleChange(e.target.value)}
+                          />
+                          {error && (
+                            <FieldDescription className="text-destructive">
+                              {error.message}
+                            </FieldDescription>
                           )}
-                        </Button>
-                      )}
-                    </form.Subscribe>
-                  </Field>
+                        </Field>
+                      )
+                    }}
+                  </form.Field>
+
+                  <form.Subscribe selector={(s) => [s.isSubmitting]}>
+                    {([isSubmitting]) => (
+                      <Button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="animate-spin" /> Verificando...
+                          </>
+                        ) : (
+                          'Verificar'
+                        )}
+                      </Button>
+                    )}
+                  </form.Subscribe>
                 </FieldGroup>
               </form>
             </CardContent>
