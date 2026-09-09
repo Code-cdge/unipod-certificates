@@ -4,11 +4,10 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getAttendantByCode } from '@/app/(frontend)/_server/data'
 import { codeSchema } from '@/lib/schemas'
+import { ATTENDANT_COOKIE_MAX_AGE_SECONDS, ATTENDANT_COOKIE_NAME } from '@/lib/constants'
 
 type FieldErrors = Record<string, { message: string }>
 type VerifyResult = { success: true } | { success: false; fieldErrors: FieldErrors }
-
-const COOKIE_MAX_AGE_SECONDS = 300
 
 function fieldError(field: string, message: string): VerifyResult {
   return { success: false, fieldErrors: { [field]: { message } } }
@@ -26,11 +25,11 @@ export async function verifyCode(code: string): Promise<VerifyResult> {
   }
 
   const cookieStore = await cookies()
-  cookieStore.set('attendant_code', parsed.data.code, {
+  cookieStore.set(ATTENDANT_COOKIE_NAME, parsed.data.code, {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
-    // maxAge: COOKIE_MAX_AGE_SECONDS,
+    maxAge: ATTENDANT_COOKIE_MAX_AGE_SECONDS, // ahora coincide con lo que renueva proxy.ts
   })
 
   redirect('/certificates')

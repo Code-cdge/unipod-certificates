@@ -17,18 +17,16 @@ export function CertificateCard({
 
   return (
     <Card className="rounded-sm hover:ring-foreground/25 hover:scale-[1.02] transition-all duration-300 gap-0">
-      <CardContent className="flex-1 flex flex-col justify-end">
-        <div className="flex items-center flex-wrap gap-2 mb-3">
-          <p className="text-lg font-bold leading-tight">{training.title}</p>
-          <Badge variant="outline" className="-ml-1">
-            <Timer className="size-3" />
-            Duración: {training.workload} horas
-          </Badge>
-        </div>
+      <CardContent className="gap-3">
+        <p className="text-xl font-bold leading-tight">{training.title}</p>
+        <Badge variant="outline" className="-ml-1">
+          <Timer className="size-3" />
+          Duración: {training.workload} horas
+        </Badge>
         <p className="text-muted-foreground line-clamp-3 mb-5">{training.description}</p>
       </CardContent>
       <CardFooter className="flex flex-row gap-2">
-        <Button variant="outline" className="flex-1" onClick={download} disabled={isPending}>
+        <Button className="flex-1" onClick={download} disabled={isPending}>
           {isPending ? (
             <>
               <Loader2 className="animate-spin size-3.5" /> Preparando...

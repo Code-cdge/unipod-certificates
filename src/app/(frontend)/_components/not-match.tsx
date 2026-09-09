@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import { XCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { SectionTitle } from '@/components/shared/section-title'
 import { HeroPattern } from '@/components/shared/hero-pattern'
+import { cn } from 'cn'
+import { buttonVariants } from '@/components/ui/button'
 
 export function NoMatch() {
   return (
@@ -21,23 +21,11 @@ export function NoMatch() {
             title="No pudimos confirmar su identidad"
             description="Ocurrió un problema al recuperar sus datos. Vuelva a verificar su código."
           />
-          <Card className="mx-auto max-w-lg w-full">
-            <CardContent className="space-y-4">
-              <div className="flex flex-col gap-2 pt-1">
-                <Button className="w-full" nativeButton={false} render={<Link href="/verify" />}>
-                  Verificar de nuevo
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  nativeButton={false}
-                  render={<Link href="/contacto" />}
-                >
-                  Contactar con soporte
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="flex justify-center">
+            <Link href="/verify" className={cn(buttonVariants({ variant: 'outline' }), 'border')}>
+              Verificar de nuevo
+            </Link>
+          </div>
         </div>
       </div>
     </main>

@@ -30,11 +30,11 @@ export function CertificatesView({ attendant, certificatesResponse }: Certificat
           <HeroPattern className="absolute inset-0 opacity-5" />
           <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent" />
         </div>
-        <div className="relative z-10 py-16 pt-28 border-b border-border/50">
+        <div className="relative z-10 py-16 pt-32 border-b border-border/50">
           <div className="container mx-auto px-4 space-y-6">
-            <div className="max-w-5xl text-center md:text-left">
-              <h1 className="text-3xl lg:text-4xl font-bold mb-4">¡Mis certificados!</h1>
-              <p className="text-muted-foreground max-w-2xl">
+            <div className="text-center">
+              <h1 className="text-3xl  md:text-4xl font-bold mb-4">¡Mis certificados!</h1>
+              <p className="text-lg max-w-5xl mx-auto">
                 Hola <span className="text-primary">{attendant.fullName}</span>, aquí puedes
                 descargar tus certificados.
               </p>
@@ -43,7 +43,7 @@ export function CertificatesView({ attendant, certificatesResponse }: Certificat
         </div>
       </section>
 
-      <section className="py-10 pb-16">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           {certificates.length === 0 ? (
             <Empty className="border-dashed">
@@ -59,15 +59,13 @@ export function CertificatesView({ attendant, certificatesResponse }: Certificat
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
-                <Button
-                  variant="outline"
-                  nativeButton={false}
-                  render={<Link href="/contacto" />}
-                ></Button>
+                <Button variant="outline" nativeButton={false} render={<Link href="/verify" />}>
+                  Verificar otro código
+                </Button>
               </EmptyContent>
             </Empty>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {certificates.map((certificate, idx) => (
                 <CertificateCard
                   key={idx}
