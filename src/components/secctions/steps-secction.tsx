@@ -4,12 +4,17 @@ const steps = [
   {
     step: 1,
     title: "Introduzca su código",
-    description: "El codigo de verificacion asignado",
+    description: "El código de verificación que recibió al finalizar la formación",
   },
   {
     step: 2,
-    title: "Descarge",
-    description: "Reciba su sertificado en formato PDF",
+    title: "Revise sus certificados",
+    description: "Confirme sus datos y vea las formaciones encontradas con su código",
+  },
+  {
+    step: 3,
+    title: "Descargue",
+    description: "Reciba cada certificado en formato PDF",
   },
 ];
 
@@ -20,10 +25,10 @@ export function StepsSecction() {
         <div className="text-center mx-auto mb-18">
           <h2 className="text-3xl font-bold mb-4">¿Cómo funciona?</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Descargar tu certificado es facíl. Sigue estos pasos simples
+            Descargar su certificado es fácil. Siga estos pasos simples
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {steps.map((step) => (
             <div key={step.step} className="text-center group">
               <div
