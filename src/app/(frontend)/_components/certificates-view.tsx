@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/empty'
 import { use } from 'react'
 import { CertificateCard } from './certificate-card'
+import Link from 'next/link'
 
 type CertificatesViewProps = {
   attendant: Attendant
@@ -42,7 +43,7 @@ export function CertificatesView({ attendant, certificatesResponse }: Certificat
         </div>
       </section>
 
-      <section className="py-10">
+      <section className="py-10 pb-16">
         <div className="container mx-auto px-4">
           {certificates.length === 0 ? (
             <Empty className="border-dashed">
@@ -51,10 +52,18 @@ export function CertificatesView({ attendant, certificatesResponse }: Certificat
                   <CloudAlert className="size-12" />
                 </EmptyMedia>
                 <EmptyTitle>No se encontraron certificados</EmptyTitle>
-                <EmptyDescription></EmptyDescription>
+                <EmptyDescription>
+                  Su código es válido, pero todavía no tiene certificados cargados. Si cree que esto
+                  es un error, contacte con el equipo de soporte de{' '}
+                  <span className="text-primary font-bold">UniPod.</span>.
+                </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
-                <Button variant="outline">Recargar</Button>
+                <Button
+                  variant="outline"
+                  nativeButton={false}
+                  render={<Link href="/contacto" />}
+                ></Button>
               </EmptyContent>
             </Empty>
           ) : (
