@@ -2,6 +2,7 @@ import { AppHeader } from '@/components/layout/app-header'
 import './styles.css'
 import { AppFooter } from '@/components/layout/app-footer'
 import { ThemeProvider } from '@/components/prividers/theme-provider'
+import { Toaster } from '@/components/ui/toast'
 
 export const metadata = {
   description: 'Descarga tu certificado de finalización de formaciones de uniPod',
@@ -20,6 +21,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
         >
           <AppHeader />
           {children}
+          <Toaster />
           <AppFooter />
         </ThemeProvider>
       </body>

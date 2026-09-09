@@ -1,8 +1,11 @@
-export type Certificate = {
-  fullName?: string | null
-  trainings: {
-    title: string
-    placement: string
-    certificateUrl: string
-  }[]
+export interface Attendant {
+  id: string
+  fullName: string
+}
+
+export interface AttendantTraining {
+  title: string
+  description: string
+  workload: number
+  certificateUrl: string
 }
