@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { NoMatch } from '../_components/not-match'
 import { CertificatesView } from '../_components/certificates-view'
 import { getAttendantByCode, getAttendantTrainings } from '@/app/(frontend)/_server/data'
+import { Suspense } from 'react'
 
 export default async function CertificatesPage() {
   const cookieStore = await cookies()
@@ -12,6 +13,10 @@ export default async function CertificatesPage() {
   const attendant = await getAttendantByCode(code)
   if (!attendant) return <NoMatch />
 
-  const certificates = await getAttendantTrainings(attendant.id)
-  return <CertificatesView attendant={attendant} certificates={certificates} />
+  const response = getAttendantTrainings(attendant.id)
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CertificatesView attendant={attendant} certificatesResponse={response} />
+    </Suspense>
+  )
 }

@@ -1,110 +1,75 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import type { Attendant, AttendantTraining } from "@/lib/types";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { SectionTitle } from "@/components/shared/section-title";
-import { CheckCircle2, Clock, Download as DownloadIcon, Loader2, User } from "lucide-react";
-import { HeroPattern } from "@/components/shared/hero-pattern";
-import { useDownload } from "@/hooks/use-download";
+import type { Attendant, AttendantTraining } from '@/lib/types'
+import { Button } from '@/components/ui/button'
+import { CloudAlert } from 'lucide-react'
+import { HeroPattern } from '@/components/shared/hero-pattern'
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import { use } from 'react'
+import { CertificateCard } from './certificate-card'
 
 type CertificatesViewProps = {
-  attendant: Attendant;
-  certificates: AttendantTraining[];
-};
-
-export function CertificatesView({ attendant, certificates }: CertificatesViewProps) {
-  const tieneMultiples = certificates.length > 1;
-
-  return (
-    <main className="relative">
-      <div className="absolute inset-0">
-        <HeroPattern className="absolute inset-0 bg-repeat opacity-4" />
-      </div>
-      <div className="relative py-32">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto size-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-            <CheckCircle2 className="size-8 text-primary" />
-          </div>
-          <SectionTitle
-            title={tieneMultiples ? "Descargue sus certificados" : "Descargue su certificado"}
-            description={
-              tieneMultiples
-                ? "Encontramos varias formaciones asociadas a su código."
-                : "Verifique que este es su certificado antes de descargarlo."
-            }
-          />
-          <Card className="w-full max-w-lg mx-auto">
-            <CardContent className="space-y-4">
-              <div className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 flex items-center gap-3">
-                <div className="size-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <User className="size-4 text-primary" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground">Nombre del participante</p>
-                  <p className="font-medium text-sm mt-0.5 truncate">{attendant.fullName}</p>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                {certificates.map((training) => (
-                  <CertificateRow
-                    key={training.title}
-                    attendantName={attendant.fullName}
-                    training={training}
-                  />
-                ))}
-              </div>
-
-              <Button
-                variant="outline"
-                nativeButton={false}
-                className="w-full"
-                render={<Link href="/verify" />}
-              >
-                Verificar otro código
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </main>
-  );
+  attendant: Attendant
+  certificatesResponse: Promise<AttendantTraining[]>
 }
 
-function CertificateRow({
-  attendantName,
-  training,
-}: {
-  attendantName: string;
-  training: AttendantTraining;
-}) {
-  const { download, isPending } = useDownload(
-    training.certificateUrl,
-    `${attendantName}-${training.title}.pdf`,
-  );
-
+export function CertificatesView({ attendant, certificatesResponse }: CertificatesViewProps) {
+  const certificates = use(certificatesResponse)
   return (
-    <div className="rounded-lg border px-4 py-3 space-y-2.5">
-      <div>
-        <p className="font-medium text-sm">{training.title}</p>
-        <p className="text-xs text-muted-foreground mt-0.5">{training.description}</p>
-        <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-          <Clock className="size-3" /> {training.workload} horas
-        </p>
-      </div>
-      <Button className="w-full" onClick={download} disabled={isPending}>
-        {isPending ? (
-          <>
-            <Loader2 className="animate-spin" /> Preparando descarga...
-          </>
-        ) : (
-          <>
-            <DownloadIcon /> Descargar certificado
-          </>
-        )}
-      </Button>
-    </div>
-  );
+    <main className="flex flex-col">
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0">
+          <HeroPattern className="absolute inset-0 opacity-5" />
+          <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent" />
+        </div>
+        <div className="relative z-10 py-16 pt-28 border-b border-border/50">
+          <div className="container mx-auto px-4 space-y-6">
+            <div className="max-w-5xl text-center md:text-left">
+              <h1 className="text-3xl lg:text-4xl font-bold mb-4">¡Mis certificados!</h1>
+              <p className="text-muted-foreground max-w-2xl">
+                Hola <span className="text-primary">{attendant.fullName}</span>, aquí puedes
+                descargar tus certificados.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-10">
+        <div className="container mx-auto px-4">
+          {certificates.length === 0 ? (
+            <Empty className="border-dashed">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <CloudAlert className="size-12" />
+                </EmptyMedia>
+                <EmptyTitle>No se encontraron certificados</EmptyTitle>
+                <EmptyDescription></EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <Button variant="outline">Recargar</Button>
+              </EmptyContent>
+            </Empty>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {certificates.map((certificate, idx) => (
+                <CertificateCard
+                  key={idx}
+                  attendantName={attendant.fullName}
+                  training={certificate}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
+  )
 }

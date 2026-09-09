@@ -30,7 +30,7 @@ export async function verifyCode(code: string): Promise<VerifyResult> {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
-    maxAge: COOKIE_MAX_AGE_SECONDS,
+    // maxAge: COOKIE_MAX_AGE_SECONDS,
   })
 
   redirect('/certificates')
