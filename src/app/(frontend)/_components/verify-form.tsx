@@ -12,6 +12,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { codeSchema } from '@/lib/schemas'
 import { verifyCode } from '../_server/actions'
+import { useState } from 'react'
+import { Turnstile } from 'next-turnstile'
 
 const formOpts = formOptions({
   defaultValues: { code: '' },
@@ -25,10 +27,11 @@ const formOpts = formOptions({
 })
 
 export function Verifyform() {
+  const [turnstileToken, setTurnstileToken] = useState('')
   const form = useForm({
     ...formOpts,
     onSubmit: async ({ formApi, value }) => {
-      const result = await verifyCode(value.code)
+      const result = await verifyCode(value.code, turnstileToken)
       if (!result.success)
         formApi.setErrorMap({
           onDynamic: {
@@ -85,9 +88,15 @@ export function Verifyform() {
                     }}
                   </form.Field>
 
+                  <Turnstile
+                    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                    onVerify={(token) => setTurnstileToken(token)}
+                    onExpire={() => setTurnstileToken('')}
+                  />
+
                   <form.Subscribe selector={(s) => [s.isSubmitting]}>
                     {([isSubmitting]) => (
-                      <Button type="submit" disabled={isSubmitting}>
+                      <Button type="submit" disabled={isSubmitting || !turnstileToken}>
                         {isSubmitting ? (
                           <>
                             <Loader2 className="animate-spin" /> Verificando...

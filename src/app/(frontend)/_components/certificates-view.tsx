@@ -1,24 +1,29 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import type { Attendant, AttendantTraining } from "@/lib/types";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { CloudAlert, Sparkles } from "lucide-react";
-import { HeroPattern } from "@/components/shared/hero-pattern";
+import Link from 'next/link'
+import type { Attendant, AttendantTraining } from '@/lib/types'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { CloudAlert, Sparkles } from 'lucide-react'
+import { HeroPattern } from '@/components/shared/hero-pattern'
 import {
-  Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle,
-} from "@/components/ui/empty";
-import { use } from "react";
-import { CertificateCard } from "./certificate-card";
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import { use } from 'react'
+import { CertificateCard } from './certificate-card'
 
 type CertificatesViewProps = {
-  attendant: Attendant;
-  certificatesResponse: Promise<AttendantTraining[]>;
-};
+  attendant: Attendant
+  certificatesResponse: Promise<AttendantTraining[]>
+}
 
 export function CertificatesView({ attendant, certificatesResponse }: CertificatesViewProps) {
-  const certificates = use(certificatesResponse);
+  const certificates = use(certificatesResponse)
 
   return (
     <main className="flex flex-col">
@@ -33,7 +38,7 @@ export function CertificatesView({ attendant, certificatesResponse }: Certificat
               <Badge variant="secondary" className="mx-auto">
                 <Sparkles className="size-3" />
                 {certificates.length === 1
-                  ? "1 certificado encontrado"
+                  ? '1 certificado encontrado'
                   : `${certificates.length} certificados encontrados`}
               </Badge>
             )}
@@ -56,8 +61,8 @@ export function CertificatesView({ attendant, certificatesResponse }: Certificat
                 </EmptyMedia>
                 <EmptyTitle>No se encontraron certificados</EmptyTitle>
                 <EmptyDescription>
-                  Su código es válido, pero todavía no tiene certificados cargados. Si cree que
-                  esto es un error, contacte con el equipo de soporte de{" "}
+                  Su código es válido, pero todavía no tiene certificados cargados. Si cree que esto
+                  es un error, contacte con el equipo de soporte de{' '}
                   <span className="text-primary font-bold">UniPod</span>.
                 </EmptyDescription>
               </EmptyHeader>
@@ -81,5 +86,5 @@ export function CertificatesView({ attendant, certificatesResponse }: Certificat
         </div>
       </section>
     </main>
-  );
+  )
 }

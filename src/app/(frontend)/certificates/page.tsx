@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 function CertificatesSkeleton() {
   return (
     <div className="container mx-auto px-4 py-16">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} className="rounded-lg gap-0">
             <CardContent className="gap-3 pt-5">
