@@ -11,7 +11,7 @@ import { CircleQuestionMark, Loader2, ShieldKeyhole } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { codeSchema } from '@/lib/schemas'
-import { verifyCode } from '../verify/actions'
+import { verifyCode } from '../_server/actions'
 
 const formOpts = formOptions({
   defaultValues: { code: '' },
@@ -27,9 +27,14 @@ const formOpts = formOptions({
 export function Verifyform() {
   const form = useForm({
     ...formOpts,
-    onSubmit: async ({ value }) => {
+    onSubmit: async ({ formApi, value }) => {
       const result = await verifyCode(value.code)
-      if (!result.success) return { field: result.fieldErrors }
+      if (!result.success)
+        formApi.setErrorMap({
+          onDynamic: {
+            fields: result.fieldErrors,
+          },
+        })
     },
   })
 

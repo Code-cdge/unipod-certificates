@@ -1,12 +1,11 @@
+import Link from 'next/link'
+import { XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { XCircle, AlertCircle, ArrowRight } from 'lucide-react'
 import { SectionTitle } from '@/components/shared/section-title'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import Link from 'next/link'
 import { HeroPattern } from '@/components/shared/hero-pattern'
 
-export function NoMatch({ code }: { code: string }) {
+export function NoMatch() {
   return (
     <main className="relative">
       <div className="absolute inset-0">
@@ -19,40 +18,22 @@ export function NoMatch({ code }: { code: string }) {
           </div>
           <SectionTitle
             className="text-destructive"
-            title="No encontramos ese certificado"
-            description="El código introducido no coincide con ningún registro."
+            title="No pudimos confirmar su identidad"
+            description="Ocurrió un problema al recuperar sus datos. Vuelva a verificar su código."
           />
           <Card className="mx-auto max-w-lg w-full">
             <CardContent className="space-y-4">
-              <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Código introducido</span>
-                <span className="font-mono text-sm font-medium text-destructive">{code}</span>
-              </div>
-
-              <Alert variant="destructive">
-                <AlertTitle className="flex items-center gap-1.5">
-                  <AlertCircle className="size-3.5" /> Causas más comunes
-                </AlertTitle>
-                <AlertDescription>
-                  <ul className="mt-1.5 space-y-1">
-                    <li className="flex items-center gap-2">
-                      <ArrowRight className="size-3.5 text-white" /> El código no es valido
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <ArrowRight className="size-3.5 text-white" />
-                      El certificado aún no ha sido cargado por el equipo de UniPod
-                    </li>
-                  </ul>
-                </AlertDescription>
-              </Alert>
               <div className="flex flex-col gap-2 pt-1">
+                <Button className="w-full" nativeButton={false} render={<Link href="/verify" />}>
+                  Verificar de nuevo
+                </Button>
                 <Button
                   variant="outline"
                   className="w-full"
                   nativeButton={false}
-                  render={<Link href="/certificate" />}
+                  render={<Link href="/contacto" />}
                 >
-                  Volver a intentar
+                  Contactar con soporte
                 </Button>
               </div>
             </CardContent>

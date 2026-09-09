@@ -4,7 +4,7 @@ import { Separator } from '../ui/separator'
 
 const FOOTER_LINKS = [
   { href: '/', label: 'Inicio' },
-  { href: '/certificado', label: 'Certificado' },
+  { href: '/certificates', label: 'Certificado' },
   { href: '/admin', label: 'Administración' },
 ]
 
