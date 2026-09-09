@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { useDownload } from '@/hooks/use-download'
 import type { AttendantTraining } from '@/lib/types'
@@ -42,15 +44,6 @@ export function CertificateCard({ attendantName, training }: CertificateCardProp
               Descargar <Download className="size-3.5" />
             </>
           )}
-        </Button>
-        <Button
-          size="icon"
-          variant="outline"
-          nativeButton={false}
-          className="border-primary! text-primary bg-primary/20! hover:bg-primary/40!"
-          render={<a href={training.certificateUrl} target="_blank" rel="noopener noreferrer" />}
-        >
-          <Eye className="size-3.5" />
         </Button>
       </div>
     </div>

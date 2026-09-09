@@ -5,6 +5,7 @@ import * as migration_20260902_074011_create_attendant_trainings_table from './2
 import * as migration_20260903_152128_alter_users from './20260903_152128_alter_users';
 import * as migration_20260904_122116_alter_trainings from './20260904_122116_alter_trainings';
 import * as migration_20260908_080230_alter_trainings from './20260908_080230_alter_trainings';
+import * as migration_20260909_100521_alter_trainings from './20260909_100521_alter_trainings';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20260908_080230_alter_trainings.up,
     down: migration_20260908_080230_alter_trainings.down,
-    name: '20260908_080230_alter_trainings'
+    name: '20260908_080230_alter_trainings',
+  },
+  {
+    up: migration_20260909_100521_alter_trainings.up,
+    down: migration_20260909_100521_alter_trainings.down,
+    name: '20260909_100521_alter_trainings'
   },
 ];
