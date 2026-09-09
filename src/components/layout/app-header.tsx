@@ -8,7 +8,7 @@ import { MobileMenu } from './app-mobile-menu'
 
 export const NAVLINKS = [
   { href: '/', title: 'Inicio', icon: Home },
-  { href: '/certificates', title: 'Certificado', icon: Award },
+  { href: '/verify', title: 'Certificado', icon: Award },
   { href: '/admin', title: 'Administracion', icon: ShieldUser },
 ]
 

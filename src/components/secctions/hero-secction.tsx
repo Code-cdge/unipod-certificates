@@ -35,7 +35,7 @@ export function HeroSection() {
               espera
             </p>
             <div className="flex items-center justify-center gap-2">
-              <Link href="/certificates" className={cn(buttonVariants({ size: 'lg' }))}>
+              <Link href="/verify" className={cn(buttonVariants({ size: 'lg' }))}>
                 Obtener mi sertificado
                 <Award />
               </Link>

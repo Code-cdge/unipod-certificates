@@ -1,31 +1,37 @@
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { useDownload } from '@/hooks/use-download'
-import { AttendantTraining } from '@/lib/types'
-import { Download, Eye, Loader2, Timer } from 'lucide-react'
+import type { AttendantTraining } from '@/lib/types'
+import { Award, Download, Eye, Loader2 } from 'lucide-react'
 
-export function CertificateCard({
-  attendantName,
-  training,
-}: {
+type CertificateCardProps = {
   attendantName: string
   training: AttendantTraining
-}) {
+}
+
+export function CertificateCard({ attendantName, training }: CertificateCardProps) {
   const filename = `${attendantName}-${training.title}.pdf`
   const { download, isPending } = useDownload(training.certificateUrl, filename)
 
   return (
-    <Card className="rounded-sm hover:ring-foreground/25 hover:scale-[1.02] transition-all duration-300 gap-0">
-      <CardContent className="gap-3">
-        <p className="text-xl font-bold leading-tight">{training.title}</p>
-        <Badge variant="outline" className="-ml-1">
-          <Timer className="size-3" />
-          Duración: {training.workload} horas
-        </Badge>
-        <p className="text-muted-foreground line-clamp-3 mb-5">{training.description}</p>
-      </CardContent>
-      <CardFooter className="flex flex-row gap-2">
+    <div className="relative border-2 border-primary/20 rounded-md p-6 bg-linear-to-b from-primary/3 to-transparent">
+      {/* Esquinas tipo sello, como las de un diploma físico */}
+      <div className="absolute top-2 left-2 size-3 border-t-2 border-l-2 border-primary/40" />
+      <div className="absolute top-2 right-2 size-3 border-t-2 border-r-2 border-primary/40" />
+      <div className="absolute bottom-2 left-2 size-3 border-b-2 border-l-2 border-primary/40" />
+      <div className="absolute bottom-2 right-2 size-3 border-b-2 border-r-2 border-primary/40" />
+
+      <Award className="size-6 text-primary/60 mx-auto mb-3" />
+      <p className="text-center text-xs tracking-widest text-muted-foreground uppercase mb-2">
+        Certificado de participación
+      </p>
+      <p className="text-lg font-bold text-center leading-tight mb-3">{training.title}</p>
+      <div className="h-px bg-primary/15 w-16 mx-auto mb-3" />
+      <p className="text-muted-foreground text-sm text-center line-clamp-3 mb-1">
+        {training.description}
+      </p>
+      <p className="text-xs text-center text-muted-foreground mb-5">{training.workload} horas</p>
+
+      <div className="flex gap-2">
         <Button className="flex-1" onClick={download} disabled={isPending}>
           {isPending ? (
             <>
@@ -41,11 +47,12 @@ export function CertificateCard({
           size="icon"
           variant="outline"
           nativeButton={false}
+          className="border-primary! text-primary bg-primary/20! hover:bg-primary/40!"
           render={<a href={training.certificateUrl} target="_blank" rel="noopener noreferrer" />}
         >
           <Eye className="size-3.5" />
         </Button>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   )
 }
