@@ -44,6 +44,7 @@ export const Trainings: CollectionConfig = withUserAuditFields(
         minLength: 1,
         maxLength: 256,
         required: true,
+        defaultValue: ''
       },
       {
         name: 'placement',
@@ -59,6 +60,7 @@ export const Trainings: CollectionConfig = withUserAuditFields(
         type: 'number',
         min: 0,
         required: true,
+        defaultValue: 0
       },
       {
         type: 'row',
