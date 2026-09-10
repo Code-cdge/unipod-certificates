@@ -24,6 +24,19 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      title: { default: 'Administración de certificados UniPod', template: '%s | UniPod' },
+      icons: {
+        icon: '/assets/images/icon.png',
+      },
+    },
+    components: {
+      graphics: {
+        Logo: '@/payload/lib/ui/Logo.tsx',
+        Icon: '@/payload/lib/ui/Icon.tsx',
+      },
+      beforeLogin: ['@/payload/lib/ui/BeforeLogin.tsx'],
+    },
   },
   i18n: {
     supportedLanguages: { es },
